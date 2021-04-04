@@ -1,7 +1,7 @@
 // Struct containing information read from the initial state file
-const struct World {
+struct World {
     int nrOfGenerations; // User-specified number of generations (steps)
-    int** initialState; // Pointer to a 2D array representing initial world state
+    int** state; // Pointer to a 2D array representing the world state
     int rows; // Nr of rows in the 2D array
     int columns; // Nr of columns in the 2D array
 };

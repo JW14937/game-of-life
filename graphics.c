@@ -1,4 +1,5 @@
 #include "logic.h"
+#include <stdlib.h>
 
 /** Entry point for displaying the evolutionary process graphically
  * Takes in struct to initial state of the world and displays the cells as squares

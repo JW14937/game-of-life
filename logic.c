@@ -1,4 +1,5 @@
 #include "logic.h"
+#include <stdlib.h>
 
 /** Takes in a pointer to World structure containing initial state
  * Then iterates through all generations, and calculates the next one by calling nextState
@@ -16,6 +17,7 @@ const struct World* finalState (const struct World* initialState) {
 
     // Malloc for finalState struct pointer
     // Malloc for final array using ** pointers and copy the non-const 2D array into it
+    return NULL;
 }
 
 /** Takes in a pointer to 2D array containing state of the world, and nr of rows and columns in that array
@@ -34,4 +36,5 @@ int** nextState (int** prevState, const int rows, const int cols) {
     // First, calculate nr of neighbours, then pick next state depending on it
     // Create a 2D array using pointer, malloc each cell (like in fileHandling)
     // Return the pointer
+    return NULL;
 }

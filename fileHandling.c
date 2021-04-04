@@ -1,5 +1,6 @@
 #include "logic.h"
 #include "fileHandling.h"
+#include <stdlib.h>
 
 /** Opens the file with provided filename
  * Reads the file and extracts information about the world from it
@@ -24,6 +25,7 @@ const struct World* loadInitialState (const char* filename, const char* generati
     // Create the pointer to struct, MALLOC
     // Put rows, cols, generations into struct (directly by value, dereferencing struct)
     // Put pointer to array into struct
+    return NULL;
 }
 
 /** Saves the state of the 2D array in a txt file
@@ -34,6 +36,7 @@ const struct World* loadInitialState (const char* filename, const char* generati
     // Work in reverse to deallocate the 2D array:
     // for(i=0; i<columns; i++)  { free(p[i]); }
     // free (p); 
+    return -1;
 }
 
 /** Checks whether the provided text contains only numbers
