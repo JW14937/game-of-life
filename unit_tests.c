@@ -31,11 +31,11 @@ void test_finalState() {
     TEST_ASSERT_NOT_NULL_MESSAGE(p->state, "finalState returned pointer to World with NULL state array");
     TEST_ASSERT_NOT_EMPTY_MESSAGE(p->state, "finalState returned pointer to World with empty state array");
     TEST_ASSERT_EQUAL_INT(p->nrOfGenerations, w.nrOfGenerations);
-    TEST_ASSERT_MESSAGE(p->state[0][0] = 0, "Wrong final cell [0][0] state");
-    TEST_ASSERT_MESSAGE(p->state[1][0] = 1, "Wrong final cell [1][0] state");
-    TEST_ASSERT_MESSAGE(p->state[1][2] = 0, "Wrong final cell [1][2] state");
-    TEST_ASSERT_MESSAGE(p->state[2][1] = 1, "Wrong final cell [2][1] state");
-    TEST_ASSERT_MESSAGE(p->state[2][2] = 0, "Wrong final cell [2][2] state");
+    TEST_ASSERT_MESSAGE(p->state[0][0] == 0, "Wrong final cell [0][0] state");
+    TEST_ASSERT_MESSAGE(p->state[1][0] == 1, "Wrong final cell [1][0] state");
+    TEST_ASSERT_MESSAGE(p->state[1][2] == 0, "Wrong final cell [1][2] state");
+    TEST_ASSERT_MESSAGE(p->state[2][1] == 1, "Wrong final cell [2][1] state");
+    TEST_ASSERT_MESSAGE(p->state[2][2] == 0, "Wrong final cell [2][2] state");
 
     free(a[0]);
     free(a[1]);
@@ -63,12 +63,11 @@ void test_nextState() {
     int** nextA = nextState(a, 3, 3);
     TEST_ASSERT_NOT_NULL_MESSAGE(nextA, "nextState returned a NULL pointer");
     TEST_ASSERT_NOT_EMPTY_MESSAGE(nextA, "nextState returned pointer to an empty state array");
-    // Equal sizes?
-    TEST_ASSERT_MESSAGE(nextA[0][0] = 0, "Wrong final cell [0][0] state");
-    TEST_ASSERT_MESSAGE(nextA[1][0] = 0, "Wrong final cell [1][0] state");
-    TEST_ASSERT_MESSAGE(nextA[1][2] = 1, "Wrong final cell [1][2] state");
-    TEST_ASSERT_MESSAGE(nextA[2][1] = 1, "Wrong final cell [2][1] state");
-    TEST_ASSERT_MESSAGE(nextA[2][2] = 1, "Wrong final cell [2][2] state");
+    TEST_ASSERT_MESSAGE(nextA[0][0] == 0, "Wrong final cell [0][0] state");
+    TEST_ASSERT_MESSAGE(nextA[1][0] == 0, "Wrong final cell [1][0] state");
+    TEST_ASSERT_MESSAGE(nextA[1][2] == 1, "Wrong final cell [1][2] state");
+    TEST_ASSERT_MESSAGE(nextA[2][1] == 1, "Wrong final cell [2][1] state");
+    TEST_ASSERT_MESSAGE(nextA[2][2] == 1, "Wrong final cell [2][2] state");
 
     free(a[0]);
     free(a[1]);

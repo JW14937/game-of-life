@@ -1,3 +1,6 @@
+#define MAX_ROWS 50
+#define MAX_COLS 50
+
 // Struct containing information read from the initial state file
 struct World {
     int nrOfGenerations; // User-specified number of generations (steps)

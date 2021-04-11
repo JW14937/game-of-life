@@ -4,8 +4,9 @@
 /** Takes in a pointer to World structure containing initial state
  * Then iterates through all generations, and calculates the next one by calling nextState
  * The only thing different between initialState and finalState is the 2D world state array
- * Returns pointer to World structure containing final state 2D array if successful, 0 otherwise */
+ * Returns pointer to World structure containing final state 2D array if successful, NULL otherwise */
 const struct World* finalState (const struct World* initialState) {
+    // If any validation doesn't work, exit program
     // Validate struct pointer (not null) and array pointer (not null)
     // Validate row and col, and generations (within range)
     // Create a non-const 2D array (not pointer), and copy initial state array into it
@@ -28,13 +29,64 @@ const struct World* finalState (const struct World* initialState) {
  * - A cell containing something other than 1 or 0 
  * - Null pointer to previous state array */
 int** nextState (int** prevState, const int rows, const int cols) {
-    // Validate nr of rows and columns (in range)
-    // Make sure prevState not null
-    // Go through all rows and columns in the 2D array; make sure each row not null
-    // Calculate the next state using rules of Game of Life
-    // On edges - assume neighbours outside are dead
-    // First, calculate nr of neighbours, then pick next state depending on it
-    // Create a 2D array using pointer, malloc each cell (like in fileHandling)
-    // Return the pointer
-    return NULL;
+
+    if(prevState == NULL) { exit(1); }
+    if(rows<=0 || cols<=0 || rows>MAX_ROWS || cols>MAX_COLS) { exit(1); }
+
+    // Allocate space for the state array after 1 generation
+    int** nextStateArray;
+    nextStateArray = (int**)malloc(rows * sizeof(int*));
+    for(int i=0; i<cols; i++) { nextStateArray[i] = (int*)malloc(cols * sizeof(int)); }
+
+    for(int i=0; i<rows; i++) {
+        for(int j=0; j<cols; j++) {
+            // Accessing a single cell
+
+            // Validate that cell contains 1 or 0
+            if(!(prevState[i][j]==0 || prevState[i][j]==1)) { exit(1); }
+
+            // Count the neighbours
+            int neighbours = 0;
+
+            // Top-left
+            if( (i-1)>=0 && (j-1)>=0 && prevState[i-1][j-1]==1 ) neighbours++;
+            // Top
+            if( (i-1)>=0 && prevState[i-1][j]==1 ) neighbours++;
+            // Top-right
+            if( (i-1)>=0 && (j+1)<cols && prevState[i-1][j+1]==1) neighbours++;
+            // Left
+            if( (j-1)>=0 && prevState[i][j-1]==1 ) neighbours++;
+            // Right
+            if( (j+1)<cols && prevState[i][j+1]==1 ) neighbours++;
+            // Bottom-left
+            if( (i+1)<rows && (j-1)>=0 && prevState[i+1][j-1]==1 ) neighbours++;
+            // Bottom
+            if( (i+1)<rows && prevState[i+1][j]==1 ) neighbours++;
+            // Bottom-right
+            if( (i+1)<rows && (j+1)<cols && prevState[i+1][j+1]==1 ) neighbours++;
+
+
+            // Considering live cells
+            if(prevState[i][j]==1) {
+
+                // Underpopulation or overpopulation
+                if(neighbours < 2 || neighbours > 3) { nextStateArray[i][j] = 0; }
+
+                // Neighbourhood is just right
+                else { nextStateArray[i][j] = 1; }
+            }
+
+            // Considering dead cells
+            else {
+
+                // Reproduction
+                if(neighbours == 3) { nextStateArray[i][j] = 1; }
+
+                // Stay dead
+                else { nextStateArray[i][j] = 0; }
+            }
+        }
+    }
+
+    return nextStateArray;
 }
