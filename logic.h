@@ -1,5 +1,6 @@
 #define MAX_ROWS 50
 #define MAX_COLS 50
+#define MAX_GENERATIONS 100
 
 // Struct containing information read from the initial state file
 struct World {
@@ -10,4 +11,4 @@ struct World {
 };
 
 const struct World* finalState (const struct World* initialState);
-int** nextState (int** prevState, const int rows, const int cols);
+int** nextState (const int** prevState, const int rows, const int cols);

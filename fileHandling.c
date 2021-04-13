@@ -8,7 +8,7 @@
  * Puts all the information into a const variable of type struct World accessed via pointer
  * Returns the pointer to the world structure if successful, NULL otherwise */
 const struct World* loadInitialState (const char* filename, const char* generations) {
-    // Check if nr of generations within range, all numbers (onlyNumbers()), and stoi
+    // Check if nr of generations, rows, cols within range, all numbers (onlyNumbers()), and stoi
     // Check if file with this name exists, open file
     // Create pointer to 2D array: int ** p
     // Read the 1st line, store in 1D array - that's our 1st row. Nr of columns = size of 1D array
