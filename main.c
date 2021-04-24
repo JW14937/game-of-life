@@ -1,6 +1,6 @@
 #include "fileHandling.h"
 #include "logic.h"
-#include "graphics.h"
+//#include "graphics.h"
 
 int main(int argc, char *argv[])  {
 
@@ -16,8 +16,6 @@ int main(int argc, char *argv[])  {
 
     // Display the evolutionary process graphically
     //display(initialState);
-
-    //int delay = 160;
 
     struct World w;
     w.nrOfGenerations = 3;
@@ -44,20 +42,9 @@ int main(int argc, char *argv[])  {
 
     const struct World* initialTestState = &w;
 
-    display(initialTestState);   // setup the game data
-    //render(a, 3, 3); // render initial state
+    finalState(initialTestState);
 
-    /*while(1) {      // game loop
-
-        input();            // keyboard input
-
-        if( !update() )     // update and ...
-            gameover();         // check if finished
-
-        render();           // render new state
-
-        SDL_Delay( delay ); // time between frames (ms)
-    }*/
+    //display(initialTestState);
 
     return 0;
 }

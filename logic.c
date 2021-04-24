@@ -1,5 +1,6 @@
 #include "logic.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /** Takes in a pointer to World structure containing initial state
  * Then iterates through all generations, and calculates the next one by calling nextState
@@ -7,50 +8,59 @@
  * Returns pointer to World structure containing final state 2D array if successful, NULL otherwise */
 const struct World* finalState (const struct World* initialState) {
 
-    // Null pointer and rows/columns/generations outside of range validation
+    // Validation
+    if(!worldIsValid(initialState)) { 
+        printf("\nError: Could not calculate the final state. The initial state world is invalid\n");
+        exit(1); 
+    }
+    if(initialState->nrOfGenerations == 0) { 
 
-    if(initialState == NULL || initialState->state == NULL) { exit(1); }
-    if(initialState->rows <= 0 || initialState->columns <= 0) { exit(1); }
-    if(initialState->rows > MAX_ROWS || initialState->columns > MAX_COLS) { exit(1); }
-    if(initialState->nrOfGenerations < 0 || initialState->nrOfGenerations > MAX_GENERATIONS) { exit(1); }
+        // Create a copy, because it will be freed at the end
+        struct World* worldCopy = NULL;
 
-    if(initialState->nrOfGenerations == 0) { return initialState; }
+        int** arrayCopy = NULL;
+        arrayCopy = malloc2DArray(initialState->rows, initialState->columns);
+
+        for(int i=0; i<initialState->rows; i++) {
+            for(int j=0; j<initialState->columns; j++) {
+                arrayCopy[i][j] = initialState->state[i][j];
+            }
+        }
+
+        worldCopy = mallocWorld(initialState->nrOfGenerations, initialState->rows, initialState->columns, arrayCopy);
+        return worldCopy; 
+    }
 
     // First generation
     int** nextStateArray = nextState(initialState->state, initialState->rows, initialState->columns);
 
     // Subsequent generations
+
     for(int i=1; i<initialState->nrOfGenerations; i++) {
 
-        // Create a buffer copy
-        int** bufferArray = (int**)malloc(initialState->rows * sizeof(int*));
-
+        // Create a buffer copy:
+        // Allocate memory
+        int** bufferArray = NULL;
+        bufferArray = malloc2DArray(initialState->rows, initialState->columns);
+        // Copy
         for(int i=0; i<initialState->rows; i++) {
-            bufferArray[i] = (int*)malloc(initialState->columns * sizeof(int));
-
             for(int j=0; j<initialState->columns; j++) {
                 bufferArray[i][j] = nextStateArray[i][j];
             }
         }
         
         // Free the memory occupied by the previous nextStateArray
-        for(int i=0; i<initialState->rows; i++) { free(nextStateArray[i]); }
-        free(nextStateArray);
+        free2DArray(nextStateArray, initialState->rows, initialState->columns);
 
         // Advance the generations by 1, using the buffer copy
         nextStateArray = nextState(bufferArray, initialState->rows, initialState->columns);
 
         // Free the buffer copy
-        for(int i=0; i<initialState->rows; i++) { free(bufferArray[i]); }
-        free(bufferArray);
+        free2DArray(bufferArray, initialState->rows, initialState->columns);
     }
 
-    struct World* finalState = (struct World* ) malloc(sizeof(struct World));
-    
-    finalState->nrOfGenerations = initialState->nrOfGenerations;
-    finalState->rows = initialState->rows;
-    finalState->columns = initialState->columns;
-    finalState->state = nextStateArray;
+    struct World* finalState = NULL;
+    finalState = mallocWorld(initialState->nrOfGenerations, initialState->rows, initialState->columns, nextStateArray);
 
     return finalState;
     // Free the nextStateArray memory at the end function
@@ -68,14 +78,21 @@ int** nextState (const int** prevState, const int rows, const int cols) {
 
     // Null pointer and rows/columns outside of range validation
 
-    if(prevState == NULL) { exit(1); }
-    if(rows <= 0 || cols <= 0 || rows > MAX_ROWS || cols > MAX_COLS) { exit(1); }
+    if(prevState == NULL) { 
+        printf("\nError: Could not calculate next state. The previous state array is NULL\n");
+        exit(1); 
+    }
+    if(rows <= 0 || cols <= 0 || rows > MAX_ROWS || cols > MAX_COLS) { 
+        printf("\nError: Could not calculate next state. The rows or columns are out of bounds\n");
+        printf("Rows must be between 2 and %d\n", MAX_ROWS);
+        printf("Columns must be between 2 and %d\n", MAX_COLS);
+        exit(1); 
+    }
 
     // Allocate space for the state array after 1 generation
 
     int** nextStateArray;
-    nextStateArray = (int**)malloc(rows * sizeof(int*));
-    for(int i=0; i<cols; i++) { nextStateArray[i] = (int*)malloc(cols * sizeof(int)); }
+    nextStateArray = malloc2DArray(rows, cols);
 
     for(int i=0; i<rows; i++) {
         for(int j=0; j<cols; j++) {
@@ -130,4 +147,95 @@ int** nextState (const int** prevState, const int rows, const int cols) {
     }
 
     return nextStateArray;
+}
+
+/** Takes in a pointer to a World structure and validates the values in it.
+ * Returns 0 if one of the following errors is detected:
+ * - Null pointer to the World structure or the state array
+ * - Rows, columns or generations out of bounds
+ * - A cell in the 2D array is not 1 or 0
+ * Otherwise, returns 1 */
+int worldIsValid (const struct World* world) {
+
+    if(world == NULL) {
+        printf("\nError: Pointer to the World structure null\n"); 
+        return 0;
+    }
+    if(world->state == NULL) {
+        printf("\nError: Pointer to the state array null\n"); 
+        return 0;
+    }
+    if(world->rows < 2 || world->columns < 2) {
+        printf("\nError: Rows or columns below the minimum for a 2D array\n"); 
+        return 0;
+    }
+    if(world->rows > MAX_ROWS || world->columns > MAX_COLS) { 
+        printf("\nError: Rows or columns exceeding the limit\n"); 
+        return 0;
+    }
+    if(world->nrOfGenerations < 0 || world->nrOfGenerations > MAX_GENERATIONS) {
+        printf("\nError: Number of generations out of bounds\n"); 
+        return 0;
+    }
+
+    // Check that all cells are either 1 or 0
+    for(int i=0; i<world->rows; i++) {
+        for(int j=0; j<world->columns; j++) {
+
+            if(world->state[i][j] != 1 && world->state[i][j] != 0) {
+                printf("\nError: A cell in the 2D array has a value other than 1 or 0\n");
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+
+/** Uses malloc to allocate space for a world structure
+ * Initialises the structure with the supplied nr of rows, columns, generations, and the state array */
+struct World* mallocWorld(int generations, int rows, int cols, int** stateArray) {
+
+    struct World* worldPointer = (struct World* ) malloc(sizeof(struct World));
+    
+    worldPointer->nrOfGenerations = generations;
+    worldPointer->rows = rows;
+    worldPointer->columns = cols;
+    worldPointer->state = stateArray;
+
+    return worldPointer;
+}
+
+/** Uses malloc to allocate the desired number of rows and columns, using the supplied pointer
+ * Returns the pointer to the array, or a NULL pointer if the nr of rows or columns is less than 2 */
+int** malloc2DArray(int rows, int cols) {
+
+    if(rows < 2 || cols < 2) {
+        printf("\nError: Trying to allocate a 2D array with the nr of rows or columns < 2\n");
+        printf("\nReturned a NULL pointer\n");
+        int** errorPointer = NULL;
+
+        return errorPointer;
+    }
+
+    int** arrayPointer = (int**)malloc(rows * sizeof(int*));
+    for(int i=0; i<rows; i++) { arrayPointer[i] = (int*)malloc(cols * sizeof(int)); }
+
+    return arrayPointer;
+}
+
+/** Frees the memory occupied by the World structure */
+void freeWorld(struct World* world) {
+    
+    free2DArray(world->state, world->rows, world->columns);
+    free(world);
+}
+
+/** Frees the memory occupied by the array to which the pointer is supplied as an argument
+ * Requires the nr of rows and columns of the array */
+void free2DArray (int** array, int rows, int cols) {
+    for(int i=0; i<rows; i++) {
+        free(array[i]);
+    }
+    free(array);
 }

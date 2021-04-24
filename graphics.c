@@ -7,18 +7,18 @@
 
 SDL_Renderer* renderer = NULL;
 
-SDL_Surface*  live_cell_surface = NULL;
-SDL_Surface*  dead_cell_surface = NULL;
+SDL_Surface*  liveCellSurface = NULL;
+SDL_Surface*  deadCellSurface = NULL;
 
-SDL_Texture*  live_cell_texture = NULL;
-SDL_Texture*  dead_cell_texture = NULL;
+SDL_Texture*  liveCellTexture = NULL;
+SDL_Texture*  deadCellTexture = NULL;
 
 
 /** Initialise the graphical display using SDL
  * Return 0 if successful, 1 otherwise */
-static int initialiseDisplay()
-{
-    // Attribute the code?
+static int initialiseDisplay() {
+
+// Citation?
     if(SDL_Init(SDL_INIT_VIDEO) != 0) {
         fprintf(stderr, "Error initialising SDL: %s\n", SDL_GetError()); 
         return 1;
@@ -33,11 +33,11 @@ static int initialiseDisplay()
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 
-    live_cell_surface = SDL_LoadBMP("images/live_cell.bmp");
-    dead_cell_surface = SDL_LoadBMP("images/dead_cell.bmp");
+    liveCellSurface = SDL_LoadBMP("images/live_cell.bmp");
+    deadCellSurface = SDL_LoadBMP("images/dead_cell.bmp");
 
-    live_cell_texture = SDL_CreateTextureFromSurface(renderer, live_cell_surface);
-    dead_cell_texture = SDL_CreateTextureFromSurface(renderer, dead_cell_surface);
+    liveCellTexture = SDL_CreateTextureFromSurface(renderer, liveCellSurface);
+    deadCellTexture = SDL_CreateTextureFromSurface(renderer, deadCellSurface);
 
     return 0;
 }
@@ -50,6 +50,8 @@ static int initialiseDisplay()
  * Exits with code 0 if successful, returns 1 otherwise */
 int display(const struct World* initialState) {
 
+    if(!worldIsValid(initialState)) { return 1; }
+
     initialiseDisplay();
 
     // Display the initial state
@@ -58,7 +60,7 @@ int display(const struct World* initialState) {
     // Load the next generation
 
     int** nextStateArray = (int**)malloc(initialState->rows * sizeof(int*));
-    for(int i=0; i<initialState->columns; i++) { 
+    for(int i=0; i<initialState->rows; i++) { 
         nextStateArray[i] = (int*)malloc(initialState->columns * sizeof(int)); 
     }
     nextStateArray = nextState(initialState->state, initialState->rows, initialState->columns);
@@ -129,13 +131,13 @@ static int displayState (const int** state, const int rows, const int cols) {
             cells[i][j].y = i;
             
             // Live cell
-            if(state[i][j] == 1) { drawCell(cells[i][j], live_cell_texture, cellSize); }
+            if(state[i][j] == 1) { drawCell(cells[i][j], liveCellTexture, cellSize); }
 
             // Dead cell
-            else if(state[i][j] == 0) { drawCell(cells[i][j], dead_cell_texture, cellSize); }
+            else if(state[i][j] == 0) { drawCell(cells[i][j], deadCellTexture, cellSize); }
 
-            // Error - state must be 1 or 0
-            else { return 1; }
+            // Error
+            else { printf("Error: Each cell state must be 1 or 0"); return 1; }
         }
     }
 
@@ -145,7 +147,7 @@ static int displayState (const int** state, const int rows, const int cols) {
 }
 
 // Citation ?
-void drawCell(node cell, SDL_Texture *stateTexture, int size) {
+static void drawCell(node cell, SDL_Texture *stateTexture, int size) {
 
     SDL_Rect drawnCell;
 

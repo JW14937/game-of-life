@@ -12,3 +12,8 @@ struct World {
 
 const struct World* finalState (const struct World* initialState);
 int** nextState (const int** prevState, const int rows, const int cols);
+int worldIsValid (const struct World* world);
+struct World* mallocWorld(int generations, int rows, int cols, int** stateArray);
+int** malloc2DArray(int rows, int cols);
+void freeWorld(struct World* world);
+void free2DArray (int** array, int rows, int cols);
