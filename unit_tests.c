@@ -64,15 +64,15 @@ void test_finalState() {
     wEmpty.state = a;
 
     const struct World* finWEmpty = finalState(&wEmpty);
-    TEST_ASSERT_NOT_NULL_MESSAGE(finWEmpty, "finalState returned a NULL pointer");
-    TEST_ASSERT_NOT_NULL_MESSAGE(finWEmpty->state, "finalState returned pointer to World with NULL state array");
-    TEST_ASSERT_NOT_EMPTY_MESSAGE(finWEmpty->state, "finalState returned pointer to World with empty state array");
+    TEST_ASSERT_NOT_NULL_MESSAGE(finWEmpty, "finalState (Empty world) returned a NULL pointer");
+    TEST_ASSERT_NOT_NULL_MESSAGE(finWEmpty->state, "finalState (Empty world) returned pointer to World with NULL state array");
+    TEST_ASSERT_NOT_EMPTY_MESSAGE(finWEmpty->state, "finalState (Empty world) returned pointer to World with empty state array");
     TEST_ASSERT_EQUAL_INT(finWEmpty->nrOfGenerations, wEmpty.nrOfGenerations);
-    TEST_ASSERT_MESSAGE(finWEmpty->state[0][0] == 0, "Wrong final cell [0][0] state");
-    TEST_ASSERT_MESSAGE(finWEmpty->state[0][1] == 0, "Wrong final cell [0][1] state");
-    TEST_ASSERT_MESSAGE(finWEmpty->state[1][1] == 0, "Wrong final cell [1][1] state");
-    TEST_ASSERT_MESSAGE(finWEmpty->state[2][0] == 0, "Wrong final cell [2][0] state");
-    TEST_ASSERT_MESSAGE(finWEmpty->state[2][1] == 0, "Wrong final cell [2][1] state");
+    TEST_ASSERT_MESSAGE(finWEmpty->state[0][0] == 0, "finalState (Empty world): Wrong final cell [0][0] state");
+    TEST_ASSERT_MESSAGE(finWEmpty->state[0][1] == 0, "finalState (Empty world): Wrong final cell [0][1] state");
+    TEST_ASSERT_MESSAGE(finWEmpty->state[1][1] == 0, "finalState (Empty world): Wrong final cell [1][1] state");
+    TEST_ASSERT_MESSAGE(finWEmpty->state[2][0] == 0, "finalState (Empty world): Wrong final cell [2][0] state");
+    TEST_ASSERT_MESSAGE(finWEmpty->state[2][1] == 0, "finalState (Empty world): Wrong final cell [2][1] state");
 
     free2DArray(a, wEmpty.rows, wEmpty.columns);
     freeWorld(finWEmpty);
@@ -101,9 +101,9 @@ void test_finalState() {
     wZeroGens.state = a;
 
     const struct World* finWZeroGens = finalState(&wZeroGens);
-    TEST_ASSERT_NOT_NULL_MESSAGE(finWZeroGens, "finalState returned a NULL pointer");
-    TEST_ASSERT_NOT_NULL_MESSAGE(finWZeroGens->state, "finalState returned pointer to World with NULL state array");
-    TEST_ASSERT_NOT_EMPTY_MESSAGE(finWZeroGens->state, "finalState returned pointer to World with empty state array");
+    TEST_ASSERT_NOT_NULL_MESSAGE(finWZeroGens, "finalState (0 generations) returned a NULL pointer");
+    TEST_ASSERT_NOT_NULL_MESSAGE(finWZeroGens->state, "finalState (0 generations) returned pointer to World with NULL state array");
+    TEST_ASSERT_NOT_EMPTY_MESSAGE(finWZeroGens->state, "finalState (0 generations) returned pointer to World with empty state array");
     TEST_ASSERT_EQUAL_INT(finWZeroGens->nrOfGenerations, wZeroGens.nrOfGenerations);
     TEST_ASSERT_EQUAL_INT(finWZeroGens->state[0][0], wZeroGens.state[0][0]);
     TEST_ASSERT_EQUAL_INT(finWZeroGens->state[1][0], wZeroGens.state[1][0]);
@@ -140,11 +140,11 @@ void test_nextState() {
 
     TEST_ASSERT_NOT_NULL_MESSAGE(nextNorm, "nextState returned a NULL pointer");
     TEST_ASSERT_NOT_EMPTY_MESSAGE(nextNorm, "nextState returned pointer to an empty state array");
-    TEST_ASSERT_MESSAGE(nextNorm[0][0] == 0, "Wrong next cell [0][0] state");
-    TEST_ASSERT_MESSAGE(nextNorm[1][0] == 0, "Wrong next cell [1][0] state");
-    TEST_ASSERT_MESSAGE(nextNorm[1][2] == 0, "Wrong next cell [1][2] state");
-    TEST_ASSERT_MESSAGE(nextNorm[2][1] == 1, "Wrong next cell [2][1] state");
-    TEST_ASSERT_MESSAGE(nextNorm[2][3] == 0, "Wrong next cell [2][3] state");
+    TEST_ASSERT_MESSAGE(nextNorm[0][0] == 0, "nextState: Wrong next cell [0][0] state");
+    TEST_ASSERT_MESSAGE(nextNorm[1][0] == 0, "nextState: Wrong next cell [1][0] state");
+    TEST_ASSERT_MESSAGE(nextNorm[1][2] == 0, "nextState: Wrong next cell [1][2] state");
+    TEST_ASSERT_MESSAGE(nextNorm[2][1] == 1, "nextState: Wrong next cell [2][1] state");
+    TEST_ASSERT_MESSAGE(nextNorm[2][3] == 0, "nextState: Wrong next cell [2][3] state");
 
     free2DArray(a, 3, 4);
     free2DArray(nextNorm, 3, 4);
@@ -161,12 +161,12 @@ void test_nextState() {
 
     int** nextMin = nextState(a, 2, 2);
 
-    TEST_ASSERT_NOT_NULL_MESSAGE(nextMin, "nextState returned a NULL pointer");
-    TEST_ASSERT_NOT_EMPTY_MESSAGE(nextMin, "nextState returned pointer to an empty state array");
-    TEST_ASSERT_MESSAGE(nextMin[0][0] == 1, "Wrong next cell [0][0] state");
-    TEST_ASSERT_MESSAGE(nextMin[0][1] == 1, "Wrong next cell [0][1] state");
-    TEST_ASSERT_MESSAGE(nextMin[1][0] == 1, "Wrong next cell [1][0] state");
-    TEST_ASSERT_MESSAGE(nextMin[1][1] == 1, "Wrong next cell [1][1] state");
+    TEST_ASSERT_NOT_NULL_MESSAGE(nextMin, "nextState (Min size) returned a NULL pointer");
+    TEST_ASSERT_NOT_EMPTY_MESSAGE(nextMin, "nextState (Min size) returned pointer to an empty state array");
+    TEST_ASSERT_MESSAGE(nextMin[0][0] == 1, "nextState (Min size): Wrong next cell [0][0] state");
+    TEST_ASSERT_MESSAGE(nextMin[0][1] == 1, "nextState (Min size): Wrong next cell [0][1] state");
+    TEST_ASSERT_MESSAGE(nextMin[1][0] == 1, "nextState (Min size): Wrong next cell [1][0] state");
+    TEST_ASSERT_MESSAGE(nextMin[1][1] == 1, "nextState (Min size): Wrong next cell [1][1] state");
 
     free2DArray(a, 2, 2);
     free2DArray(nextMin, 2, 2);
@@ -200,39 +200,39 @@ void test_worldIsValid() {
     w.state = a;
 
     int result = worldIsValid(&w);
-    TEST_ASSERT_MESSAGE(result == 1, "Result should be 1 for a normal case");
+    TEST_ASSERT_MESSAGE(result == 1, "worldIsValid: Result should be 1 for a normal case");
 
     // 0 generations
 
     w.nrOfGenerations = 0;
     result = worldIsValid(&w);
-    TEST_ASSERT_MESSAGE(result == 1, "Result should be 1 for 0 generations");
+    TEST_ASSERT_MESSAGE(result == 1, "worldIsValid: Result should be 1 for 0 generations");
 
     // Maximum allowed nr of generations
 
     w.nrOfGenerations = MAX_GENERATIONS;
     result = worldIsValid(&w);
-    TEST_ASSERT_MESSAGE(result == 1, "Result should be 1 for maximum allowed nr of generations");
+    TEST_ASSERT_MESSAGE(result == 1, "worldIsValid: Result should be 1 for maximum allowed nr of generations");
 
     // Negative generations
 
     w.nrOfGenerations = -3;
     result = worldIsValid(&w);
-    TEST_ASSERT_MESSAGE(result == 0, "Result should be 0 for negative generations");
+    TEST_ASSERT_MESSAGE(result == 0, "worldIsValid: Result should be 0 for negative generations");
     w.nrOfGenerations = 3;
 
     // Generations out of bounds
 
     w.nrOfGenerations = MAX_GENERATIONS+5;
     result = worldIsValid(&w);
-    TEST_ASSERT_MESSAGE(result == 0, "Result should be 0 for generations out of bounds");
+    TEST_ASSERT_MESSAGE(result == 0, "worldIsValid: Result should be 0 for generations out of bounds");
     w.nrOfGenerations = 3; 
 
     // A cell with value other than 1 or 0
 
     a[1][1] = 5;
     result = worldIsValid(&w);
-    TEST_ASSERT_MESSAGE(result == 0, "Result should be 0 for cells with values other than 1 or 0");
+    TEST_ASSERT_MESSAGE(result == 0, "worldIsValid: Result should be 0 for cells with values other than 1 or 0");
     a[1][1] = 1;
 
     free2DArray(a, 3, 4);
@@ -247,11 +247,57 @@ void test_mallocWorld() {
     a = malloc2DArray(3, 4);
     w = mallocWorld(10, 3, 4, a);
 
-    TEST_ASSERT_MESSAGE(w->nrOfGenerations == 10, "Wrong nr of generations");
-    TEST_ASSERT_MESSAGE(w->rows == 3, "Wrong nr of rows");
-    TEST_ASSERT_MESSAGE(w->columns == 4, "Wrong nr of columns");
+    TEST_ASSERT_MESSAGE(w->nrOfGenerations == 10, "mallocWorld: Wrong nr of generations");
+    TEST_ASSERT_MESSAGE(w->rows == 3, "mallocWorld: Wrong nr of rows");
+    TEST_ASSERT_MESSAGE(w->columns == 4, "mallocWorld: Wrong nr of columns");
 
     freeWorld(w);
+
+}
+
+void test_loadInitialState() {
+
+    // A normal case
+
+    const struct World* w = loadInitialState("exampleInitialStateFile.txt", 5);
+
+    TEST_ASSERT_NOT_NULL_MESSAGE(w, "loadInitialState returned a NULL pointer");
+    TEST_ASSERT_NOT_NULL_MESSAGE(w->state, "loadInitialState returned pointer to World with NULL state array");
+    TEST_ASSERT_NOT_EMPTY_MESSAGE(w->state, "loadInitialState returned pointer to World with empty state array");
+    TEST_ASSERT_MESSAGE(w->nrOfGenerations == 5, "loadInitialState: Wrong nr of generations");
+    TEST_ASSERT_MESSAGE(w->rows == 3, "loadInitialState: Wrong nr of rows");
+    TEST_ASSERT_MESSAGE(w->columns == 12, "loadInitialState: Wrong nr of columns");
+    TEST_ASSERT_MESSAGE(w->state[0][0] == 1, "loadInitialState: Wrong next cell [0][0] state");
+    TEST_ASSERT_MESSAGE(w->state[0][11] == 1, "loadInitialState: Wrong next cell [0][11] state");
+    TEST_ASSERT_MESSAGE(w->state[1][5] == 0, "loadInitialState: Wrong next cell [1][5] state");
+    TEST_ASSERT_MESSAGE(w->state[1][10] == 1, "loadInitialState: Wrong next cell [1][10] state");
+    TEST_ASSERT_MESSAGE(w->state[2][0] == 1, "loadInitialState: Wrong next cell [2][0] state");
+    TEST_ASSERT_MESSAGE(w->state[2][7] == 0, "loadInitialState: Wrong next cell [2][7] state");
+    TEST_ASSERT_MESSAGE(w->state[2][11] == 1, "loadInitialState: Wrong next cell [0][0] state");
+
+    freeWorld(w);
+
+
+    // Nr of generations at the maximum allowed value
+
+    w = loadInitialState("exampleInitialStateFile.txt", MAX_GENERATIONS);
+
+    TEST_ASSERT_NOT_NULL_MESSAGE(w, "loadInitialState (Max Generations) returned a NULL pointer");
+    TEST_ASSERT_NOT_NULL_MESSAGE(w->state, "loadInitialState (Max Generations) returned pointer to World with NULL state array");
+    TEST_ASSERT_NOT_EMPTY_MESSAGE(w->state, "loadInitialState (Max Generations) returned pointer to World with empty state array");
+    TEST_ASSERT_MESSAGE(w->nrOfGenerations == 5, "loadInitialState (Max Generations): Wrong nr of generations");
+    TEST_ASSERT_MESSAGE(w->rows == 3, "loadInitialState (Max Generations): Wrong nr of rows");
+    TEST_ASSERT_MESSAGE(w->columns == 12, "loadInitialState (Max Generations): Wrong nr of columns");
+    TEST_ASSERT_MESSAGE(w->state[0][0] == 1, "loadInitialState (Max Generations): Wrong next cell [0][0] state");
+    TEST_ASSERT_MESSAGE(w->state[0][11] == 1, "loadInitialState (Max Generations): Wrong next cell [0][11] state");
+    TEST_ASSERT_MESSAGE(w->state[1][5] == 0, "loadInitialState (Max Generations): Wrong next cell [1][5] state");
+    TEST_ASSERT_MESSAGE(w->state[1][10] == 1, "loadInitialState (Max Generations): Wrong next cell [1][10] state");
+    TEST_ASSERT_MESSAGE(w->state[2][0] == 1, "loadInitialState (Max Generations): Wrong next cell [2][0] state");
+    TEST_ASSERT_MESSAGE(w->state[2][7] == 0, "loadInitialState (Max Generations): Wrong next cell [2][7] state");
+    TEST_ASSERT_MESSAGE(w->state[2][11] == 1, "loadInitialState (Max Generations): Wrong next cell [0][0] state");
+
+    freeWorld(w);
+
 
 }
 
