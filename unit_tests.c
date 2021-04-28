@@ -3,6 +3,7 @@
 #include "logic.h"
 //#include "graphics.h"
 #include <stdlib.h>
+#include <string.h>
 
 
 // Logic module
@@ -259,7 +260,8 @@ void test_loadInitialState() {
 
     // A normal case
 
-    const struct World* w = loadInitialState("exampleInitialStateFile.txt", 5);
+    const struct World* w = NULL;
+    w = loadInitialState("exampleInitialStateFile.txt", "5", "3", "12");
 
     TEST_ASSERT_NOT_NULL_MESSAGE(w, "loadInitialState returned a NULL pointer");
     TEST_ASSERT_NOT_NULL_MESSAGE(w->state, "loadInitialState returned pointer to World with NULL state array");
@@ -271,7 +273,7 @@ void test_loadInitialState() {
     TEST_ASSERT_MESSAGE(w->state[0][11] == 1, "loadInitialState: Wrong next cell [0][11] state");
     TEST_ASSERT_MESSAGE(w->state[1][5] == 0, "loadInitialState: Wrong next cell [1][5] state");
     TEST_ASSERT_MESSAGE(w->state[1][10] == 1, "loadInitialState: Wrong next cell [1][10] state");
-    TEST_ASSERT_MESSAGE(w->state[2][0] == 1, "loadInitialState: Wrong next cell [2][0] state");
+    TEST_ASSERT_MESSAGE(w->state[2][0] == 0, "loadInitialState: Wrong next cell [2][0] state");
     TEST_ASSERT_MESSAGE(w->state[2][7] == 0, "loadInitialState: Wrong next cell [2][7] state");
     TEST_ASSERT_MESSAGE(w->state[2][11] == 1, "loadInitialState: Wrong next cell [0][0] state");
 
@@ -280,25 +282,69 @@ void test_loadInitialState() {
 
     // Nr of generations at the maximum allowed value
 
-    w = loadInitialState("exampleInitialStateFile.txt", MAX_GENERATIONS);
+    w = loadInitialState("exampleInitialStateFile.txt", "100", "3", "12");
 
     TEST_ASSERT_NOT_NULL_MESSAGE(w, "loadInitialState (Max Generations) returned a NULL pointer");
     TEST_ASSERT_NOT_NULL_MESSAGE(w->state, "loadInitialState (Max Generations) returned pointer to World with NULL state array");
     TEST_ASSERT_NOT_EMPTY_MESSAGE(w->state, "loadInitialState (Max Generations) returned pointer to World with empty state array");
-    TEST_ASSERT_MESSAGE(w->nrOfGenerations == 5, "loadInitialState (Max Generations): Wrong nr of generations");
+    TEST_ASSERT_MESSAGE(w->nrOfGenerations == 100, "loadInitialState (Max Generations): Wrong nr of generations");
     TEST_ASSERT_MESSAGE(w->rows == 3, "loadInitialState (Max Generations): Wrong nr of rows");
     TEST_ASSERT_MESSAGE(w->columns == 12, "loadInitialState (Max Generations): Wrong nr of columns");
-    TEST_ASSERT_MESSAGE(w->state[0][0] == 1, "loadInitialState (Max Generations): Wrong next cell [0][0] state");
-    TEST_ASSERT_MESSAGE(w->state[0][11] == 1, "loadInitialState (Max Generations): Wrong next cell [0][11] state");
-    TEST_ASSERT_MESSAGE(w->state[1][5] == 0, "loadInitialState (Max Generations): Wrong next cell [1][5] state");
-    TEST_ASSERT_MESSAGE(w->state[1][10] == 1, "loadInitialState (Max Generations): Wrong next cell [1][10] state");
-    TEST_ASSERT_MESSAGE(w->state[2][0] == 1, "loadInitialState (Max Generations): Wrong next cell [2][0] state");
-    TEST_ASSERT_MESSAGE(w->state[2][7] == 0, "loadInitialState (Max Generations): Wrong next cell [2][7] state");
-    TEST_ASSERT_MESSAGE(w->state[2][11] == 1, "loadInitialState (Max Generations): Wrong next cell [0][0] state");
+    TEST_ASSERT_MESSAGE(w->state[0][0] == 1, "loadInitialState (Max Generations): Wrong cell [0][0] state");
+    TEST_ASSERT_MESSAGE(w->state[0][11] == 1, "loadInitialState (Max Generations): Wrong cell [0][11] state");
+    TEST_ASSERT_MESSAGE(w->state[1][5] == 0, "loadInitialState (Max Generations): Wrong cell [1][5] state");
+    TEST_ASSERT_MESSAGE(w->state[1][10] == 1, "loadInitialState (Max Generations): Wrong cell [1][10] state");
+    TEST_ASSERT_MESSAGE(w->state[2][0] == 0, "loadInitialState (Max Generations): Wrong cell [2][0] state");
+    TEST_ASSERT_MESSAGE(w->state[2][7] == 0, "loadInitialState (Max Generations): Wrong cell [2][7] state");
+    TEST_ASSERT_MESSAGE(w->state[2][11] == 1, "loadInitialState (Max Generations): Wrong cell [0][0] state");
 
     freeWorld(w);
+}
 
+void test_saveFinalState() {
 
+    int** a;
+    a = malloc2DArray(2, 2);
+    a[0][0] = 1;
+    a[0][1] = 0;
+    a[1][0] = 0;
+    a[1][1] = 1;
+
+    struct World* w;
+    w = mallocWorld(5, 2, 2, a);
+
+    saveFinalState(w, "testSaveFinalState.txt");
+    
+    printf("End of unit test");
+
+    struct World* wCheck;
+    wCheck = loadInitialState("testSaveFinalState.txt", "11", "2", "2");
+
+    TEST_ASSERT_MESSAGE(wCheck->rows == 2, "saveFinalState: Wrong nr of rows");
+    TEST_ASSERT_MESSAGE(wCheck->columns == 2, "saveFinalState: Wrong nr of columns");
+    TEST_ASSERT_MESSAGE(wCheck->state[0][0] == 1, "saveFinalState: Wrong cell [0][0] state");
+    TEST_ASSERT_MESSAGE(wCheck->state[0][1] == 0, "saveFinalState: Wrong cell [0][1] state");
+    TEST_ASSERT_MESSAGE(wCheck->state[1][0] == 0, "saveFinalState: Wrong cell [1][0] state");
+    TEST_ASSERT_MESSAGE(wCheck->state[1][1] == 1, "saveFinalState: Wrong cell [1][1] state");
+
+    freeWorld(wCheck);
+}
+
+void test_onlyDigits() {
+
+    int result;
+
+    result = onlyDigits("123");
+    TEST_ASSERT_MESSAGE(result == 1, "onlyDigits should return 1 for 123");
+
+    result = onlyDigits("123a5");
+    TEST_ASSERT_MESSAGE(result == 0, "onlyDigits should return 0 for letters");
+
+    result = onlyDigits("12 3");
+    TEST_ASSERT_MESSAGE(result == 0, "onlyDigits should return 0 for spaces");
+
+    result = onlyDigits("12-3");
+    TEST_ASSERT_MESSAGE(result == 0, "onlyDigits should return 0 for -");
 }
 
 
@@ -316,6 +362,9 @@ int main() {
     RUN_TEST(test_nextState);
     RUN_TEST(test_worldIsValid);
     RUN_TEST(test_mallocWorld);
+    RUN_TEST(test_loadInitialState);
+    RUN_TEST(test_saveFinalState);
+    RUN_TEST(test_onlyDigits);
 
     return UNITY_END();
 }

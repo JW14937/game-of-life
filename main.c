@@ -1,15 +1,15 @@
 #include "fileHandling.h"
 #include "logic.h"
-//#include "graphics.h"
+#include "graphics.h"
 
 int main(int argc, char *argv[])  {
 
-    /*if(argc != 3) {
-      printf("Provide 2 arguments: <initial state txt file name> <nr of generations>\n");
+    /*if(argc != 5) {
+      printf("Provide 4 arguments: <initial state txt file name> <nr of generations> <rows> <columns>\n");
       return 1;
     }*/
 
-    //const struct World* initialState = loadInitialState(argv[0], argv[1]);
+    //const struct World* initialState = loadInitialState(argv[0], argv[1], argv[2], argv[3]);
 
     // First calculate the final state (finalState), then save it to file (saveFinalState)
     //saveFinalState(finalState(initialState), "finalState.txt");
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])  {
 
     finalState(initialTestState);
 
-    //display(initialTestState);
+    display(initialTestState);
 
     return 0;
 }

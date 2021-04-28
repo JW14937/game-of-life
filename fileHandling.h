@@ -1,5 +1,7 @@
 #include <stdio.h>
 
-const struct World* loadInitialState (const char* filename, const char* generations);
+const struct World* loadInitialState (const char* filename, const char* generationsString, const char* rowsString, const char* columnsString);
 int saveFinalState (const struct World* finalState, const char* filename);
-static int onlyNumbers (const char* text);
+int onlyDigits (const char* text);
+
+// make onlyNumbers static if it works with unity
