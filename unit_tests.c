@@ -1,7 +1,7 @@
 #include "unity.h"
 #include "fileHandling.h"
 #include "logic.h"
-//#include "graphics.h"
+#include "graphics.h"
 #include <stdlib.h>
 #include <string.h>
 
