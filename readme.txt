@@ -6,4 +6,6 @@ Then, the program can be run with the following command:
 
 ./life <name_of_the_initial_state_file.txt> <nr_of_generations> <rows> <columns>
 
-For the initial state file, the provided glider.txt can be used
+For the initial state file, the provided glider.txt can be used:
+
+./life glider.txt 4 6 6
