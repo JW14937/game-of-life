@@ -8,6 +8,4 @@ set(CMAKE_C_FLAGS "-std=c99")
 
 include_directories(unity/include)
 
-add_executable(life main.c logic.c fileHandling.c graphics.c)
-
 add_executable(unit_tests unit_tests.c logic.c fileHandling.c unity/src/unity.c)

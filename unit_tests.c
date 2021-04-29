@@ -256,7 +256,24 @@ void test_mallocWorld() {
 
 }
 
+// File handling module
+
 void test_loadInitialState() {
+
+    // Create an example file
+
+    FILE *file;
+    file = fopen("exampleInitialStateFile.txt", "w");
+    if(file == NULL) {
+        printf("\nError: The file to create an example for unit tests could not be opened\n");
+        return 1;
+    }
+
+    fprintf(file, "101010100001\n");
+    fprintf(file, "100010100010\n");
+    fprintf(file, "000101001101\n");
+
+    fclose(file);
 
     // A normal case
 
@@ -303,6 +320,8 @@ void test_loadInitialState() {
 
 void test_saveFinalState() {
 
+    // A normal case
+
     int** a;
     a = malloc2DArray(2, 2);
     a[0][0] = 1;
@@ -334,14 +353,22 @@ void test_onlyDigits() {
 
     int result;
 
+    // A normal case
+
     result = onlyDigits("123");
     TEST_ASSERT_MESSAGE(result == 1, "onlyDigits should return 1 for 123");
+
+    // Letter instead of a digit
 
     result = onlyDigits("123a5");
     TEST_ASSERT_MESSAGE(result == 0, "onlyDigits should return 0 for letters");
 
+    // A space
+
     result = onlyDigits("12 3");
     TEST_ASSERT_MESSAGE(result == 0, "onlyDigits should return 0 for spaces");
+
+    // A hyphen
 
     result = onlyDigits("12-3");
     TEST_ASSERT_MESSAGE(result == 0, "onlyDigits should return 0 for -");
