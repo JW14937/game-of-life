@@ -105,9 +105,11 @@ int display(const struct World* initialState) {
                 free(bufferArray);
 
                 // Proceed to the next generation
-                continue;
+                break;
             }
         }
+
+        if(i == initialState->nrOfGenerations-1) { SDL_Delay(2000); }
     }
     return 0;
 }
